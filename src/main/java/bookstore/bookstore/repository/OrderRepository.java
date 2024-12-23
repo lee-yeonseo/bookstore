@@ -31,7 +31,6 @@ public class OrderRepository {
         String jpql = "select o from Order o join o.member m";
         boolean isFirstCondition = true;
 
-        //주문 상태 검색
         if (orderSearch.getOrderStatus() != null) {
             if (isFirstCondition) {
                 jpql += " where";
@@ -42,7 +41,6 @@ public class OrderRepository {
             jpql += " o.status = :status";
         }
 
-        //회원 이름 검색
         if (StringUtils.hasText(orderSearch.getMemberName())) {
             if (isFirstCondition) {
                 jpql += " where";
@@ -64,9 +62,6 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-    /**
-     * JPA Criteria
-     */
     public List<Order> findAllByCriteria(OrderSearch orderSearch) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> cq = cb.createQuery(Order.class);
@@ -75,13 +70,11 @@ public class OrderRepository {
 
         List<Predicate> criteria = new ArrayList<>();
 
-        //주문 상태 검색
         if (orderSearch.getOrderStatus() != null) {
             Predicate status = cb.equal(o.get("status"),
                     orderSearch.getOrderStatus());
             criteria.add(status);
         }
-        //회원 이름 검색
         if (StringUtils.hasText(orderSearch.getMemberName())) {
             Predicate name =
                     cb.like(m.<String>get("name"), "%" + orderSearch.getMemberName()
